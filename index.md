@@ -1,44 +1,44 @@
----
-title: Régression avec R
----
+### Documents de cours
 
-<div>
-<div class="column-left">
-<p><img src="couverture_v2.jpg" height="650" width="430" alt="Couverture" /></p>
-</div>
+- [slides](https://lrouviere.github.io/pres_R.pdf)
+- [slides au format rapport](https://lrouviere.github.io/pres_R_article.pdf)
 
 
-<div class="column-right">
+### Exercices, notebook
 
-<h2 id="descriptif">Descriptif</h2>
-<ul>
-<li><a href="quatrieme.pdf">4e de couverture</a></li>
-<li><a href="avantpropos.pdf">Avant-propos</a></li>
-<li><a href="tdm.pdf">Sommaire détaillé</a></li>
-</ul>
-
-
-<h2 id="auteurs">Les auteurs</h2>
-<a href="https://perso.univ-rennes2.fr/pierre-andre.cornillon">Pierre-André Cornillon</a>, 
-Nicolas Hengartner,
-<a href="https://www.researchgate.net/profile/E_Matzner-Lober">Eric Matzner-Løber</a>, 
-<a href="https://perso.univ-rennes2.fr/laurent.rouviere">Laurent Rouvière</a>
+- [Fiche 1](https://lrouviere.github.io/fiche1.Rmd) : Environnement RStudio, Rmarkdown et Packages.
+- [Fiche 2](https://lrouviere.github.io/fiche2_stu.Rmd) : Les objets R.
+- [Fiche 3](https://lrouviere.github.io/fiche3_stu.Rmd) : Manipuler les données dans le tidyverse.
+- [Fiche 4](https://lrouviere.github.io/fiche4_stu.Rmd) : Visualiser les données (approche classique et ggplot2)
+  - graphes pour éditer la fiche : [Challenge 1](https://lrouviere.github.io/challenge1.pdf), [Challenge 2](https://lrouviere.github.io/challenge2.pdf), [Challenge 3](https://lrouviere.github.io/challenge3.pdf), [Challenge 4](https://lrouviere.github.io/challenge4.pdf)
+- [Fiche 5](https://lrouviere.github.io/fiche5_stu.Rmd) : Introduction aux cartes leaflet.
+- Fiche 6 : Régression avec R, [Rmd](https://lrouviere.github.io/fiche6_stu.Rmd), [html](https://lrouviere.github.io/fiche6_stu.nb.html)
+- [Fiche 7](https://lrouviere.github.io/fiche7.nb.html) : Importation de tables SAS sur R
 
 
-<h2 id="boutique">Boutique en ligne</h2>
+### Corrections
 
-[<a href="https://laboutique.edpsciences.fr/produit/1087/9782759821839/Regression%20avec%20R%20-%202e%20edition">Par ici!</a>]
-
-<h2 id="matériel-disponible">Matériel disponible</h2>
-
-<ul>
-<li><a href="https://regression-avec-r.github.io/donnees.html">Jeux de données</a></li>
-<li><a href="https://regression-avec-r.github.io/code.html">Lignes de code utilisées dans les chapitres </a></li>
-<li><a href="https://regression-avec-r.github.io/correction_exo.html">Proposition de correction des exercices</a></li>
-</ul>
-
-</div>
-</div>
+- [Fiche 1](https://lrouviere.github.io/fiche1.nb.html)
+- [Fiche 2](https://lrouviere.github.io/fiche2_cor.html)
+- [Fiche 3](https://lrouviere.github.io/fiche3_cor.html)
+- [Fiche 4](https://lrouviere.github.io/fiche4_cor.html)
+- [Fiche 5](https://lrouviere.github.io/fiche5_cor.html)
+- [Fiche 6](https://lrouviere.github.io/fiche6_cor.html)
 
 
+
+
+### Jeux de données
+
+- Fiche 3
+  - [mydata.csv](https://lrouviere.github.io/mydata.csv)
+  - [mydata2.csv](https://lrouviere.github.io/mydata2.csv)
+  - [piscines.csv](https://lrouviere.github.io/piscines.csv)
+  
+- Fiche 4
+  - [ozone.txt](https://lrouviere.github.io/ozone.txt)
+  - [taches_solaires.csv](https://lrouviere.github.io/taches_solaires.csv)
+  
+- Fiche 7
+  - [panne.sas7bdat](https://lrouviere.github.io/panne.sas7bdat)
 
