@@ -1,0 +1,337 @@
+---
+title: 'Tuto 2: R objects'
+output: html_notebook
+---
+
+## Working directory
+
+Before starting, you have to create a directory where you put all the files of the tutorial. The command
+
+```{r}
+getwd()
+```
+indicates the directory where **R** works. The command **setwd** allows to change this directory. You can also use the menu **Session -> Set Working directory -> Choose directory...**
+
+## Creating objects
+
+### Numeric
+An object can be created by being assigned to one of the three operators **<-**, **->**, **=** and by naming 
+
+```{r}
+b<-41.3  # set up object b consisting of one number: 41.3 
+x<-b     # b is assigned to x
+x=b      # b is assigned to x
+b->x     # b is assigned to x
+is.numeric(b)
+mode(b)
+```
+
+### Character
+
+```{r}
+x <- "La mort"
+y <- "aux trousses"
+paste(x,y)
+is.character(x)
+```
+
+### Logical (Boolean)
+
+```{r}
+x <- TRUE
+is.logical(x)
+mode(x)
+a <- 1
+a==1
+a!=1
+a<0
+a>0
+```
+
+### Vector
+
+There are different ways to define a vector:
+
+* collect function **c**
+```{r}
+x <- c(1.2,5,9,11)
+x
+```
+
+* sequence operator **:**
+
+```{r}
+1:5
+```
+
+*  sequence function **seq**
+
+```{r}
+seq(1,10,by=2)
+seq(0,1,length=10)
+```
+
+* The **rep** function
+
+```{r}
+rep(1,4)
+rep(c(1,3),each=3)
+```
+
+We can also create *character* or *logical* vectors
+
+```{r}
+x <- c("A","B","C")
+x <- rep("A",5)
+paste("X",1:5,sep="-")
+substr("statistician",5,9)
+```
+
+
+### Selecting part of a vector
+
+Selections are made using the selection operator **[ ]**
+
+```{r}
+x <- c(-4,-3,1,3,5,8,0)
+x[2]
+x[c(2,5)]
+x>0
+x[x>0]
+```
+
+
+### Operations
+
+Explain the following commands
+```{r}
+x <- seq(-10,10,by=2)
+y <- 1:length(x)
+x+y
+x*y
+z <- x>0
+x*z
+```
+
+## Factors
+
+Factors are particular vectors very useful when we deal with categorical variables.
+
+```{r}
+V1 <- factor(c("less20years","more50years","less20years","more50years","less20years"))
+V1
+levels(V1)
+levels(V1) <- c("Young","Old")
+V1
+```
+
+
+### Exercise 1
+
+1. Compute the mean, the sum, the median and the variance of the vector (1,3,8,9,11)
+
+
+2. Create the following vectors using the **rep** function:
+
+vec1 = 1 2 3 4 5 1 2 3 4 5 1 2 3 4 5 
+
+vec2 = 1 1 1 2 2 2 3 3 3 4 4 4 5 5 5
+
+vec3 = 1 1 2 2 2 3 3 3 3 4 4 4 4 4
+
+
+3. Create the following vector using the **paste** function:
+
+vec4 = "A0)" "A1)" "A2)" "A3)" "A4)" "A5)" "A6)" "A7)" "A8)" "A9)" "A10)"
+
+
+4. **letters** is a vector containing the 26 letters of the alphabet. Find the index of the letter $q$ and create the vector containing "a1","b2",$\dots$ until $q$ with the index of $q$.
+
+
+
+
+## Matrix
+
+The **matrix** function allows to define matrices
+```{r}
+m <- matrix(1:4,ncol=2)
+m
+m <- matrix(1:4,nrow=2)
+m
+m <- matrix(1:4,nrow=2,byrow=TRUE)
+dim(m)
+```
+
+The position of an element within a matrix is indicated by its row and column number. Thus, to select the term in the second row and the first column, we execute
+```{r}
+m[2,1]
+```
+
+We can also extract rows or columns of matrices:
+```{r}
+m[1,] #first row
+m[,2] #second column
+```
+
+It is easy to make classical operations on matrices
+
+```{r}
+det(m) #determinant
+solve(m) #inverse
+t(m) #transpose
+n <- matrix(5:8,nrow=2)
+m+n
+m*n #be carefull: Hadamart product
+m%*%n #matrix product
+eigen(m) #eigen decomposition
+```
+
+## Lists
+
+A list is a heterogeneous object.  It is a set of ranked objects which do not always have the same mode or length. The objects are referred to as components of the list. For instance, we can put a vector and a matrix in a list with
+
+```{r}
+mylist <- list(vector=rep(1:5),mat=matrix(1:8,nrow=2))
+mylist
+length(mylist)
+```
+To extract a component from the list, we can simply indicate the position of the element that we want to extract. **[[  ]]** are used to identify the element in the list:
+
+```{r}
+mylist[[1]]
+```
+
+We can also use the name of the element, if it has one, which can be written in two ways:
+```{r}
+mylist$mat
+mylist[["mat"]]
+```
+
+
+## Dataframe
+
+Dataframes are special lists with components of the same length but with potentially different modes. The data tables generally used in statistics are often referred to as dataframe. Indeed, a data table is made up of quantitative and/or qualitative variables taken from the same individuals.
+
+```{r}
+name <- c("Paul","Mary","Steven","Charlotte","Peter")
+sex <- factor(c("M","F","M","F","M"))
+size <- c(180,165,168,170,175)
+data <- data.frame(name,sex,size)
+summary(data)
+```
+
+Observe that *name* is character vector, *sex* a factor and *size* a numeric vector.
+
+Extraction is similar to matrix and list
+
+```{r}
+data[2,3]
+data[,2]
+data$sex
+```
+
+
+## Some basic (and important) functions
+
+* **summary** produces result summaries of an object
+
+```{r}
+summary(data)
+summary(1:10)
+```
+
+* mean, sum, median, var, min, max... (easy to understand)
+
+* *sort*, *order*
+
+```{r}
+x <- c(1,8,5,4)
+sort(x)
+order(x)
+```
+
+* **apply** apply a function **f** to the rows or columns of a matrix or a dataframe
+
+```{r}
+V1 <- 1:10
+V2 <- seq(-20,25,length=10)
+df <- data.frame(V1,V2)
+apply(df,1,mean)
+apply(df,2,sum)
+```
+
+### Exercise 2
+
+1. Create the following matrix *mat* (with the column and row names, you can use **rownames** and **colnames** functions):
+
+|      |column 1 | column 2 |column 3 | column 4 |
+|:----:|:-------:|:--------:|:-------:|:--------:|
+|row-1 |    1    |     5    |    5    |    0     |
+|row-2 |    0    |     5    |    6    |    1     |
+|row-3 |    3    |     0    |    3    |    3     |
+|row-4 |    4    |     4    |    4    |    2     |
+
+
+2. Create a vector containing the diagonal elements of the matrix **mat**.
+
+3. Create a matrix containing the first 2 rows of **mat**.
+
+4. Create a matrix containing the last 2 columns of **mat**.
+
+5. Calculate the determinant and then invert the matrix using the appropriate functions.
+
+### Exercise 3
+
+We consider the **iris** dataset available in **R** (use **data(iris)** to load it and then **head(iris)** to visualise the first rows).
+
+```{r}
+data(iris)
+head(iris)
+```
+
+
+1. Compute the mean and the variance for the variables **Sepal.Width** and **Petal.Length** :
+
+
+2. Create a sub-dataset comprising only the data for the category *versicolor* of the variable *species* (call this new dataset **iris2**).
+
+
+3. Sort the data in **iris2** in descending order according to the variable **Sepal.Length** (you can use the **order** function).
+
+
+4. Compute the mean of **Sepal.Length** for each species.
+
+
+5. Add a variable (called **sum.Petal**) in the dataframe iris which corresponds to the sum of **Petal.Length** and **Petal.Width**.
+
+
+
+### Exercise 4
+
+1. Calculate the benchmark statistics (mean, min, max, etc.) for the three variables of the **ethanol** dataset (available in the *lattice* package). 
+
+
+2. Calculate the quartiles for each of the three variables. To do this, use the **apply** function with the **quantile** function.
+
+
+3. Again with the **apply** function, calculate all the deciles for each of the three variables using the argument **probs** of the **quantile** function.
+
+
+
+### Exercise 5
+
+We consider the **predidents** dataset.
+
+```{r}
+data("presidents")
+df <- matrix(presidents,ncol=4,byrow=T)
+```
+
+1. Is there at least one missing value in the 20th line of the dataset (you can use the **any** function).
+
+
+2. Which lines in the table contain at least one missing data? You can use **which**.
+
+3. Delete the rows of the table that contain at least one missing data.
+
+
