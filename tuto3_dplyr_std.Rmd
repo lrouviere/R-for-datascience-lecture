@@ -1,0 +1,380 @@
+---
+title: "Manipulating data"
+output: 
+    html_notebook:
+      toc: yes
+      toc_float: yes
+---
+
+
+
+
+In statistics, data is the starting point for any analysis. It is therefore essential to know how to master operations such as importing and exporting data, changing types, identifying individuals with missing values, concatenating factor levels, etc. These different notions are therefore presented in this sheet, which aims to be both concise and satisfactory in practice. We focus on the **dplyr** package, an up-to-date tool to manipulate data. 
+
+
+# 1. Reading data from files
+
+Functions **read.table** and **read.csv** allows to import data from *.txt* or *.csv* files.
+
+
+
+
+```{r}
+path <- file.path("../DATA", "piscines.csv") #first: directory, second: file
+piscines <- read.csv(path)
+class(piscines)
+summary(piscines)
+```
+The are many important options in **read.csv**:
+
+* **sep**: the field separation character
+* **dec**: the character used for decimal points
+* **header**: a logical value indicating whether the file contains the names of the variables as its first line
+* **row.names**: a vector of row names (to identify indivuals if needed)
+* **na.strings**: a character vector of strings which are to be interpreted as NA values.
+* ...
+
+### Exercise 1
+
+1. Import the dataset in file *mydata.csv*.
+
+
+2. Import **correctly** the dataset in file *mydata.csv* (use *sep*, *dec* and *row.names*)
+
+3. Import the dataset *mydata2.csv*
+
+4. This dataset contains missing data (collected with a dot). We need to use **na.strings** to take into account of this situation. Import correctly this dataset.
+
+5. Call the levels of *sex*: **woman** and **man** (use **levels**).
+
+
+
+**readr** package makes it easy to read many types of rectangular data, including csv, tsv and fixed width files. It uses *read_csv* and *read_table* instead of *read.csv* and *read.table*. We can also use this package with the menu **Import Dataset** of `Rstudio`.
+
+
+### Exercice 2 (Combine tables)
+
+We consider the following tables (in tibble format which needs **dplyr** or **tidyverse** package):
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+df1 <- tibble(name=c("Mary","Peter","John","July"),age=c(18,25,21,43))
+df2 <- tibble(name=c("Zac","Julian"),age=c(23,48))
+df3 <- tibble(size=c(154,178,182,134,142),name1=c("Peter","Mary","July","John","stef"))
+df1
+df2
+df3
+```
+
+We propose to combine these tables with some of the "join functions" of the **tidyverse** package (*left_join*, *full_join* for instance). Look at the cheat sheet **Data transformation with dplyr** (help+cheatsheets+...)
+
+1. Join **df1** with **df2** with *bind_rows* and compute the mean of the variable **age**. We call **df** the new data table.
+
+
+2. Join **df** with **df3** with **full_join**
+
+3. Do the same with **inner_join**
+
+4. Explain the differences between **full_join** and **inner_join**
+
+
+### Exercise 3
+
+Read the *piscine.csv* file with **readr** (use **read_csv** or click on **Import Dataset**)
+
+
+# 2. dplyr package
+
+dplyr is a powerful R-package to transform and summarize tabular data with rows and columns. We can find information [here](https://spark.rstudio.com/dplyr.html) or in this [cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf).
+
+We can manipulate data with classical matrix operations. For instance, we can obtain **Longitude** and **Latitude** for swimming pools with *Longitude* more than 153 with
+
+```{r}
+piscines[piscines$Longitude>153,c("Longitude","Latitude")]
+```
+
+**dplyr** offers a more friendly syntax
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse) #library(dplyr)
+piscines %>% select(Longitude,Latitude) %>% filter(Longitude>153)
+```
+
+Code is more efficient and easier to read.
+
+**dplyr** contains a grammar with the following verbs:
+
+* **select()**:	select columns (variables)
+* **filter()**:	filter rows (individuals)
+* **arrange()**:	re-order or arrange rows
+* **mutate()**:	create new columns (new variables)
+* **summarise()**:	summarise values (compute statistical summaries)
+* **group_by()**:	allows for group operations in the “split-apply-combine” concept
+
+## 2.1 `select()` verb
+
+It allows to select variables (columns):
+```{r, eval=FALSE, include=TRUE}
+select(df, VAR1, VAR2, ...)
+```
+
+For instance
+```{r}
+coord <- select(piscines, Latitude, Longitude)
+head(piscines, n=2)
+head(coord, n=2)
+```
+
+We can use **helper functions** (**begins_with**, **end_with**, **contains**, **matches**) for more complex selections based on the name of the variables
+
+```{r}
+coord <- select(piscines, ends_with("tude"))
+head(coord, n=2)
+```
+
+## 2.2 `mutate()` verb
+
+It allows to create new variables in the dataset:
+
+```{r, eval=FALSE, include=TRUE}
+mutate(df, NEW.VAR = expression(VAR1, VAR2, ...))
+```
+For instance
+```{r}
+df <- mutate(piscines, phrase=paste("Swimming pool", Name, "is located at the address", Address))
+select(df,phrase)
+```
+We can create many variables
+```{r}
+mutate(piscines,
+       phrase = paste("Swimming pool", Name, "is located at the address", Address),
+       unused = Longitude + Latitude
+)
+```
+
+
+## 2.3 `filter()` verb
+
+It allows to select individuals (rows): 
+```{r, eval=FALSE, include=TRUE}
+filter(df, TEST)
+```
+
+For instance
+```{r}
+p1 <- filter(piscines, Longitude>153.02)
+select(p1,Longitude)
+```
+or (we select swimming pool without "Pool" in the name)
+```{r}
+df <- filter(piscines, !grepl("Pool", Name))
+select(df,Name)
+```
+or (we select swimming pool with longitude more than 153.02 and latitude less than -27.488)
+
+```{r}
+p2 <- filter(piscines, Longitude>153.02 | Latitude < -27.488)
+p2 <- select(p2, Longitude, Latitude)
+p2
+```
+
+We use **slice** to select individuals by index:
+```{r}
+piscines %>% slice(5:8)
+```
+
+
+## 2.4 `arrange()` verb
+
+It allows to sort a dataset according to a variable:
+```{r, eval=FALSE, include=TRUE}
+arrange(df, VAR) #increasing sort
+```
+or
+```{r, eval=FALSE, include=TRUE}
+arrange(df, desc(VAR)) #decreasing sort
+```
+For instance
+```{r}
+arrange(piscines, Longitude)
+```
+or
+```{r}
+arrange(piscines, desc(Longitude))
+```
+
+##  2.5 `summarise()` verb
+
+More complex... It allows to define new datasets from the original dataset. New dataset often includes statistical summaries for the original dataset
+
+1. `mean()` ;
+1. `median()` ;
+1. `IQR()` ;
+1. `var()`.
+
+For instance
+```{r}
+summarise(piscines,
+          mean_long = mean(Longitude),
+          med_lat = median(Latitude),
+          min_lat = min(Latitude),
+          sum_long = sum(Longitude)
+)
+```
+
+You can also look at **summarise_all**, **summarise_at** (`help(summarise_all)`). **dplyr** also proposes the following functions (very useful in statistics):
+
+1. `n()`: number of lines (individuals of the dataset)
+1. `n_distinct()`: number of distinct elements of a vector
+1. `fisrt()` and `last()`: first and last element of a vector
+
+For instance, we obtain the number of swimming pool in the dataset ant the longitude of the last swimming pool in the dataset with
+```{r}
+summarise(piscines,n())
+summarise(piscines,last(Longitude))
+```
+
+
+
+## 2.6 Operations on the verbs
+
+We can of course concatenate verbs. For instance, we obtain the names of the swimming pool with the higher Longitude with:
+```{r}
+p1 <- arrange(piscines,desc(Longitude)) #decreasing sort
+summarise(p1,first(Name)) #extract the first
+```
+
+The **pipe** operator **%>%** makes the code more readable:
+```{r}
+piscines %>% arrange(desc(Longitude)) %>% summarise(first(Name))
+```
+
+## 2.7 Group data with 'Group_by' 
+
+**group_by** allows to apply operation for group of data. For instance, we want to compute mean longitudes for swimming pools of High and Low latitude (it does not make sense!). We first add a variable **lat_disc** which allows to discern high and low latitudes.
+
+```{r}
+lat_mean <- summarise(piscines,mean(Latitude))
+pisc1 <- mutate(piscines,lat_dis=factor(Latitude>as.numeric(lat_mean)))
+levels(pisc1$lat_dis) <- c("Low","High")
+```
+
+We can now compute with **group_by** the mean longitudes for the 2 groups
+
+```{r}
+group_by(pisc1,lat_dis) %>% summarise(mean_long=mean(Longitude))
+```
+
+
+### Exercise 3
+
+We consider the iris dataset
+```{r}
+data(iris)
+```
+
+Answer to the following questions with **dplyr**
+
+1. Select the variables **Petal.Width** and **Species**
+
+2. Select individuals from **Versicolor** and **Virginica** groups (you can use symbol | for condition **or**)
+
+3. Calculate the number of **setosa** with **summarise**
+
+4. Calculate the **mean** of *Petal Width* for the versicolor specie
+
+5. Add in the dataset the variable **Sum_Petal** which contains the sum of **Petal.Width** and **Sepal.Width**
+
+6. Calculate the mean and the variance of **Sepal.Length** for each **Species** (use **group_by**)
+
+### Exercise 4
+
+We consider the **hflights** dataset which contains informations about flights departing from Houston airports IAH (George Bush Intercontinental) and HOU (Houston Hobby):
+
+```{r}
+library(hflights)
+hflights <- tbl_df(hflights)
+```
+
+Variable `Unique Carrier` provides a code which identify the carrier:
+```{r}
+lut1 <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continental",
+         "DL" = "Delta", "OO" = "SkyWest", "UA" = "United", "US" = "US_Airways", 
+         "WN" = "Southwest", "EV" = "Atlantic_Southeast", "F9" = "Frontier", 
+         "FL" = "AirTran", "MQ" = "American_Eagle", "XE" = "ExpressJet", "YV" = "Mesa")
+```
+We can also specify the variable `CancellationCode` as follows:
+```{r}
+lut2 <- c("A" = "carrier", "B" = "weather", "C" = "FFA", "D" = "security", "E" = "not cancelled")
+```
+
+We change the table `hflights` to better explain variables `Unique Carrier` et `CancellationCode`.
+
+```{r}
+hflights1 <- hflights
+hflights1$UniqueCarrier <- lut1[hflights1$UniqueCarrier]
+hflights1$CancellationCode[hflights1$CancellationCode==""] <- "Z"
+hflights1$CancellationCode <- lut2[hflights1$CancellationCode]
+```
+
+From now on, we work with the table **hflights1**.
+
+
+1. Use several different ways to select variables from **Origin** to **Cancelled**
+
+2. Select variables `DepTime`, `ArrTime`, `ActualElapsedTime`, `AirTime`, `ArrDelay` and `DepDelay`. Use *helper function* **contains()**.
+
+3. Add a variable **ActualGroundTime** which corresponds to *ActualElapsedTime* minus *AirTime*
+
+4. Add a variable **AverageSpeed** (`=Distance/AirTime`) and order the dataset according to this variable
+
+5. Select flights to JFK
+
+6. Calculate the number of fligths to JFK
+
+7. Create a summary of `hflights1` which contains:
+    + `n` : the total number of flights;
+    + `n_dest`: the total number of destinations;
+    + `n_carrier` : the total numbers of carriers.
+    
+8. Create a summary of `hflights1` from the carrier **American** which contains
+    + the total number of flights ;
+    + the total number of cancelled flights ;
+    + the mean of the variable `ArrDelay` (be carefull with the `NA`).
+    
+9. Calculate for each carrier 
+    + the total number of flights
+    + the mean of the variable **AirTime**
+    
+10. Order the carriers according to the mean of departure delays 
+
+
+### Exercise 5
+
+We consider datasets about the 4 tennis major tournaments in 2013. Dataset as well as description of the variables are available at [https://archive.ics.uci.edu/ml/datasets/Tennis+Major+Tournament+Match+Statistics](https://archive.ics.uci.edu/ml/datasets/Tennis+Major+Tournament+Match+Statistics).
+
+We first focus on the men tournaments of Roland Garros.
+
+1. Import the dataset.
+
+2. Display the name of Federer's opponents.
+
+3. Display the names of the semi-finalists.
+
+4. How many points were played on average per match? It will be necessary to add in the table a variable corresponding to the number of points of each match (verb `mutate`).
+
+5. Calculate the average number of aces per match.
+
+6. Calculate the average number of aces per match for each round of the tournament.
+
+7. Calculate the total number of double faults in the tournament.
+
+8. Import the dataset which contains results of Wimbledon (always for men).
+
+9. Merge the 2 datasets. Add a variable **Tournaments** which indicates the Tournament (RG or WIMB). You can use **bind_rows** with the option **.id**.
+
+10. Display the match or Federer for each tournament.
+
+11. Make of comparison of the average number of aces per match for each round of the tournament between Roland Garros and Wimbledon.
+
+
