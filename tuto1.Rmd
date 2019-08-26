@@ -1,0 +1,134 @@
+---
+title: 'Tuto 1: RStudio environment'
+output: html_notebook
+---
+
+
+
+**R** is a free software for statistical computing and graphics. It is freely distributed by **CRAN** (Comprehensive R Archive Network) at the following adress: [https://www.r-project.org](https://www.r-project.org). The installation varies according to the operating system (Windows, Mac OS, Linux). But it is easy, you just have to follow the instructions.
+
+
+**RStudio** is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. It is also freely distributed at the address [Rstudio](https://www.rstudio.com). 
+
+The screen is divided into 4 windows:
+
+* *Console*: where you can type command and see output (enter 1+2)
+* *Workspace an History*: show the active object (enter a <- 1+2)
+* *Files Plots...*: show all files anf folders in the workspace, see output graph, install packages...
+* *R script*: where you keep a record of your work. Don't forget to regularly save this files!
+
+## R Script
+
+There are different ways to work with Rstudio. Basically, you 
+
+* open a **script** 
+* enter the command in the script
+* see the output in the console (click on the run icon)
+* save the script
+
+## Notebook and Rmarkdown
+
+Recently (two years ago), a notebook has been developed to produce high quality reports in html or pdf formats. An R Notebook is an R Markdown document with chunks that can be executed independently and interactively, with output visible immediately beneath the input. You can create a new notebook in RStudio with the menu command *File -> New File -> R Notebook*. Rcode are embedded into chunks: menu *Insert -> R* or *Ctrl + Alt + I*
+
+The [R markwdown cheat Sheet](https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf) describes the syntax for Markdwon and notebook: tabular, graphics, equation with latex (you need to install *latex* to see the equations)...
+$$\int f(x)\ dx=1$$
+
+
+
+Here are some classical commands:
+
+* *italic* and **bold**
+* unordrerd list:
+    - item 1
+    - item 2
+* ordered list:
+    1. item 1
+    2. item 2
+* table:
+
+| Col1 | Col2 | Col3 |
+|------|------|------|
+Row1 | 1 | 2| 3 |
+Row2 | 1 | 2| 3 |
+
+**R commands** need to be insert in chunks. You can quickly insert chunks like these into your file with
+
+* the keyboard shortcut Ctrl + Alt + I (OS X: Cmd + Option + I)
+* the Add Chunk  command in the editor toolbar
+* or by typing the chunk delimiters ```{r} and ```.
+
+You just have to click on *"Preview"* to see the html output file.
+
+
+### Exercise
+
+1. Open a new R Notebook file (*File -> New File -> R Notebook*)
+2. Create a section named **Cosine**
+3. Draw the cosine function: write the following code in a chunk
+
+
+```{r,echo=TRUE,eval=FALSE}
+x <- seq(-2*pi,2*pi,by=0.01)
+y <- cos(x)
+plot(x,y,type="l")
+```
+
+4. Execute the chunk (click on the green triangle).
+5. Click on the icon *Preview*.
+6. Add a second section *Sine* where you draw the sine function.
+
+
+
+The source **Rmd** files can be obtained from the html file: just click on *Code -> Download Rmd*. From now on, we **always** work on notebook.
+
+## R presentation
+
+**Rstudio** also provides many environments to produce slides. You can create a presentation in RStudio with the menu command *File -> New File -> R Markdown -> Presentation*. Then we have to select *ioslides* or *slidy*.  You have to use the same syntax as for Notebook. Separation between slides are made with ## and R commands are always in chunk.
+
+
+### Exercice
+
+Create 2 slides:
+
+1. Title: **cosine** and draw the cosine function.
+2. Title: **sine** and draw the sine function.
+
+## Packages
+
+A package is simply a set of **R** programs which supplements and enhances the functions of **R**. Packages are generally reserved for specific methods or fields of applications. There are more than 13 000 packages available at the url [https://cran.r-project.org](https://cran.r-project.org). You can install a package
+
+* with the function **install.packages** (in the console)
+* by clicking on the *Packages* icons.
+
+Once the package has been installed, you can call it with the **library** function:
+
+```{r, eval=FALSE, include=TRUE}
+install.packages(package.name)
+library(packages.name)
+```
+
+
+### Exercise
+
+1. Execute
+
+```{r,eval=FALSE,include=TRUE}
+iris %>% summarize(mean_Petal=mean(Petal.Length))
+```
+
+What happens?
+
+2. Install and load the package **tidyverse** and re-execute the previous code.
+
+```{r,eval=FALSE,include=TRUE}
+install.packages("tidyverse")
+```
+
+
+```{r}
+library(tidyverse)
+iris %>% summarize(mean_Petal=mean(Petal.Length))
+```
+
+
+

@@ -1,7 +1,7 @@
-### Documents de cours
+### Lecture nots
 
-- [slides](https://lrouviere.github.io/pres_R.pdf)
-- [slides au format rapport](https://lrouviere.github.io/pres_R_article.pdf)
+- [slides](pres_R.pdf)
+- [printable version](https://lrouviere.github.io/pres_R_article.pdf)
 
 
 ### Exercices, notebook
