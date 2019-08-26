@@ -1,12 +1,12 @@
-### Lecture nots
+### Lecture notes
 
 - [slides](pres_R.pdf)
 - [printable version](https://lrouviere.github.io/pres_R_article.pdf)
 
 
-### Exercices, notebook
+### Exercises, notebook
 
-- [Fiche 1](https://lrouviere.github.io/fiche1.Rmd) : Environnement RStudio, Rmarkdown et Packages.
+- [Tuto 1](https://lrouviere.github.io/fiche1.Rmd) : Environnement RStudio, Rmarkdown et Packages.
 - [Fiche 2](https://lrouviere.github.io/fiche2_stu.Rmd) : Les objets R.
 - [Fiche 3](https://lrouviere.github.io/fiche3_stu.Rmd) : Manipuler les données dans le tidyverse.
 - [Fiche 4](https://lrouviere.github.io/fiche4_stu.Rmd) : Visualiser les données (approche classique et ggplot2)
