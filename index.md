@@ -5,7 +5,7 @@ title: R for datascience
 ### Lecture notes
 
 - [slides](pres_R.pdf)
-- [printable version](https://lrouviere.github.io/pres_R_article.pdf)
+- [printable version](pres_R_article.pdf)
 
 
 ### Exercises, notebook
