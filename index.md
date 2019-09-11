@@ -1,3 +1,7 @@
+---
+title: R for datascience
+---
+
 ### Lecture notes
 
 - [slides](pres_R.pdf)
