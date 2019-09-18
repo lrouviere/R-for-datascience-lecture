@@ -16,7 +16,7 @@ title: R for datascience
 - Tuto 4: visualize data [Rmd](tuto4_ggplot_std.Rmd), [html](tuto4_ggplot_std.nb.html)
   - graphs for the notebook: [Challenge 1](challenge1.pdf), [Challenge 2](challenge2.pdf), [Challenge 3](challenge3.pdf), [Challenge 4](challenge4.pdf)
 - Tuto 5: mapping with leaflet [Rmd](tuto5_leaflet_std.Rmd), [html](tuto5_leaflet_std.nb.html)
-- Tuto 6: modelling with R [Rmd](tuto6_models_std.Rmd), [html](tuto5_models_std.nb.html)
+- Tuto 6: modelling with R [Rmd](tuto6_models_std.Rmd), [html](tuto6_models_std.nb.html)
 
 ### Corrections
 
