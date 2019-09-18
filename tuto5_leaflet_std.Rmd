@@ -1,0 +1,87 @@
+---
+title: "Mapping with leaflet"
+output: 
+  html_notebook:
+#    toc: true
+#    toc_float: true
+---
+
+
+
+Leaflet is a R package which allows to produce interactive maps (you can find information [here](https://rstudio.github.io/leaflet/)). We can obtain a background map with
+
+```{r}
+library(leaflet)
+m <- leaflet()
+m <- addTiles(m)
+m
+```
+
+It is possible to use the pipe operator of *dplyr*
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+leaflet()%>%addTiles()
+```
+
+Many formats of background maps are available (some examples [here](http://leaflet-extras.github.io/leaflet-providers/preview/)). For instance
+
+```{r}
+Paris <- c(2.35222,48.856614)
+m2 <- leaflet() %>% setView(lng = Paris[1], lat = Paris[2], zoom = 12) %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+m2 %>% addProviderTiles("Stamen.Toner")
+m2 %>% addProviderTiles("Stamen.Toner")
+m2%>% addProviderTiles("OpenStreetMap.BlackAndWhite")
+m2%>% addProviderTiles("Thunderforest.Transport")
+```
+
+**addMarkers** or **addCircles** can be used to add markers:
+```{r}
+data(quakes)
+leaflet(data = quakes[1:20,]) %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>%
+  addMarkers(~long, ~lat, popup = ~as.character(mag))
+```
+
+Observe that we have to use the tilda character **~** when we want to use the names of the dataframe to obtain the map. 
+
+Popups can add informations:
+
+```{r}
+content <- paste(sep = "<br/>",
+  "<b><a href='http://www.samurainoodle.com'>Samurai Noodle</a></b>",
+  "606 5th Ave. S",
+  "Seattle, WA 98138"
+)
+
+leaflet() %>% addTiles(urlTemplate = "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png") %>%
+  addPopups(-122.327298, 47.597131, content,
+    options = popupOptions(closeButton = FALSE)
+  )
+```
+
+
+### Exercise 1
+
+Put a popup which allows to localize **Edhec Business School**. Add on this popup the website of the school. You can obtain longitude and latitude of Edhec at the following [url](https://www.coordonnees-gps.fr)
+
+
+
+### Exercise 2: city bike - Paris
+
+1. Import this [dataset](https://opendata.paris.fr/explore/dataset/velib-disponibilite-en-temps-reel/export/)
+
+
+2. Explain the variables
+
+3. Suppress lines without longitude and latitude.
+
+4. Describe the variable **geo**
+
+5. Create one variable **lon** for the longitude of the station a one variable **lat** for the latitude.
+
+6. Represent the stations on a leaflet background map.
+
+7. Add a popup which indicates the number of available bikes (electric+mecanic) when we click on the station (you can use the **popup** option in the function **addCircleMarkers**). You fist have to define a variable **numBikesAvailable** which corresponds to the sum of **Nombre.de.vélo.mécanique** and **Nombre.vélo.électrique**.
+
+8. Add the name (**Nom.de.la.station**) of the station in the popup.
+
+9. Make points of different sizes in terms of the proportion of available bikes (**= numBikesAvailable/ Nombres.de.bornes.en.station**).
