@@ -1,0 +1,175 @@
+---
+title: "Regression models with R"
+output:
+  html_notebook:
+    toc: true
+    toc_float: true
+---
+
+
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+
+Regression and supervised classification address the problem of predicting an output $y\in\mathcal Y$ by inputs $x\in\mathbb R^p$. We have to find a machine:
+$$m:\mathbb R^p\to\mathcal Y$$
+with the data $(X_1,Y_1),\dots,(X_n,Y_n)$.
+
+Data are often collected in a **data frame** **df** of the form
+
+$Y$|$X_1$|$X_2$|$\dots$|$X_p$
+----|--|-----|-------|----------
+$y_1$|$x_{1,1}$|$x_{1,2}$|$\dots$|$x_{1,p}$
+$\vdots$|$\vdots$|$\vdots$|$\vdots$|$\vdots$
+$\vdots$|$\vdots$|$\vdots$|$\vdots$|$\vdots$
+$y_n$|$x_{n,1}$|$x_{n,2}$|$\dots$|$x_{n,p}$
+
+We adjust a model on **R** always in the same way: we have to indicate
+
+* the method (or the algorithm)
+* the variable to explain
+* the explanatory variables
+* the options of the method
+
+For instance, command
+
+<center>method(Y~X1+X3,data=df,...)</center>
+
+
+computes the model **method** to explain $Y$ by $X_1$ and $X_3$ with the data in **df** (dots are for eventual options of the method). Here are some examples of methods:
+
+R function | algorithm | Package | Problem
+-----------|-----------|---------|--------
+**lm** | linear model | | Reg 
+**glm**| logistic model  | |Class
+**lda**| linear discriminant analysis |MASS |Class
+**svm**| Support Vector Machine | e1071 | Class
+**knn.reg**|nearest neighbor|FNN| Reg
+**knn** | nearest neighbor|class|Class
+**rpart**| tree |rpart| Reg and Class
+**glmnet**|ridge and lasso|glmnet|Reg and Class
+**gbm**|boosting|gbm|Reg and Class
+**randomForest**|random Forest | randomForest | Reg and Class
+
+**Remark**: for *glmnet*, it is not possible to use a formula **Y~.**. We have to use a matrix for the $X$ and a vector for $Y$. Function **model.matrix** is very interesting to compute the matrix of $X$.
+
+Since a lot of algorithms are available to address  problems of regression and supervised classication, it is important to define performance criteria. Criteria are generally unknown and need to be estimated on a validation set (or by cross validation). We generaly have to used the **predict** function to make the estimation. This function is a generic function: it means that we can use **predict** for tree, random forest, logistic regression... However prediction algorithms are not the same for all models. To obtain the help on **predict** for 
+
+* logistic model, you have to enter **help(predict.glm)**
+* penalized logistic models you have to enter **help(predict.glmnet)**
+* trees, you have to enter **help(predict.rpart)**
+* random forest, you have to enter **help(predict.randomForest)**
+* ...
+
+
+In the sequel, we assume that $\mathcal Y=\mathbb R$ and we consider the regression model
+$$Y=m(X)+\varepsilon.$$
+The performance of a given estimate $\widehat{m}$ of $m$ will be measured by its mean square error:
+$$E[(Y-\widehat m(X))^2].$$
+
+## Exercise 1 (linear model, lm and predict)
+
+We consider the linear regression model
+$$Y=\beta_0+\beta_1X_1+\dots+\beta_pX_p+\varepsilon$$
+where $X_1,\dots,X_p$ are independent variables with distribution $\mathcal N(0,1)$ and $\varepsilon$ has distribution $\mathcal N(0,0.5^2)$ ($X=(X_1,\dots,X_p)$ and $\varepsilon$ are independent).
+
+We consider $p=5$, $\beta_0=0$ and $\beta_1=\dots=\beta_5=1$.
+
+1. Generate $n=1000$ observations $(x_1,y_1),\dots,(x_n,y_n)$ according to this model (use **rnorm** and **runif**). Put these observations in a **data.frame df** of dimension $1000\times 6$.
+
+```{r}
+n <- 1000
+p <- 5
+set.seed(1234)
+X.mat <- matrix(rnorm(n*p),ncol=p)
+eps <- rnorm(n,mean = 0,sd=0.5)
+df <- data.frame(X.mat,eps)
+df <- df %>% mutate(Y=X1+X2+X3+X4+X5+eps) %>% select(-eps)
+```
+
+2. Fit a linear model (**lm** function) on *df* and print the estimator of $\beta_0,\dots,\beta_5$.
+
+3. Generate a test dataset (**df.test**) $(x_{n+1},y_{n+1}),\dots,(x_{n+m},y_{n+m})$ with $m=500$ according to the same model.
+
+4. For each individuals in **df.test** dataset, calculate the predictions $\widehat y_i$ by the model fitted in question 2 (use **predict** function with the option *newdata*).
+
+5. Create a new dataframe which contains both predictions $\widehat y_i$ and observations $y_i$ of the test data set.
+
+6. With **summarize** verb, calculate the estimated mean square error of the linear model:
+$$\frac{1}{m}\sum_{i\in test}(\widehat y_i-y_i)^2.$$
+
+
+## Exercise 2 (variable selection)
+
+We still consider the model
+$$Y=\beta_0+\beta_1X_1+\dots+\beta_pX_p+\varepsilon$$
+where $X_1,\dots,X_p$ are independent variables with distribution $\mathcal N(0,1)$ and $\varepsilon$ has distribution $\mathcal N(0,0.5^2)$ ($X=(X_1,\dots,X_p)$ and $\varepsilon$ are independent).
+
+But here, we assume that $p=105$ and that
+
+* $\beta_0=0$, $\beta_1=\dots=\beta_5=1$
+* $\beta_6=\dots=\beta_{105}=0$.
+So here, only variables $X_1,\dots,X_5$ are relevant to explain $Y$.
+
+1. Generate $n=1000$ observations $(x_1,y_1),\dots,(x_n,y_n)$ according to this model. Put these observations in a **data.frame df** with dimension $1000\times 106$.
+
+2. Fit a linear model (**lm** function) with *df* and print the estimator of $\beta_0,\dots,\beta_{105}$.
+
+3. We propose to make a variable selection procedure with a backward selection approach using **BIC** criterion (this approach will be described in details in other lectures). You just have to use the **step** function with the **direction="backward"** and **k=log(1000)** options. Write the selected model. We call it **mod.step**.
+
+4. Generate a test dataset (**df.test**) $(x_{n+1},y_{n+1}),\dots,(x_{n+m},y_{n+m})$ with $m=500$ according to the same model. Compute the estimated mean square error
+$$\frac{1}{m}\sum_{i\in test}(\widehat y_i-y_i)^2$$
+for the two models.
+
+We observe that the selected model has smaller MSE than the full model. We conclude that this model is better for this criterion. We will see that it is due to the variance of least square estimates: when there are noisy variables in a model, variance of least square estimate increases. These estimates are thus less accurate. To circumvent this problem, we have to select variables (as we do here with the **step** function) or to use regularized methods such as Lasso and Ridge (ISL lecture).
+
+
+In the previous exercise we have estimated the MSE of a model by validation hold out. The dataset has been splitted into two parts:
+
+* a train set (size 1000) to fit the model
+* a test set (size 500) to estimate the mean square error.
+
+To be efficient, this approach requires a large number of data. When this is not the case, we can use $K$-fold cross validation. Such approaches consists in repeating the hold out procedures on many blocks of the data. More precisely:
+
+* the dataset is first divided into $K$ blocks $B_1,\dots,B_K$
+* For each block $B_j$,
+
+    * fit the model on the whole dataset without $B_j$. We note $m_j$ the obtained model.
+    * predict individuals in $B_j$ by $m_j$
+* We thus obtained a prediction $\widehat y_i$ for each individual of the data set and we estimate the mean square error by
+$$\frac{1}{n}\sum_{i=1}^n(\widehat y_i-y_i)^2.$$
+
+## Exercise 3 (cross validation for ozone data set)
+
+We consider the **ozone.txt** dataset available [here](https://r-stat-sc-donnees.github.io/liste_don.html). The problem is to explain the daily maximum one-hour-average ozone reading in column **maxO3**.
+
+  1. Import the dataset with **read.table**
+
+  2. Fit a linear model on the whole dataset.
+
+  3. Split the data into $10$ folds with the **createFolds** function of the **caret** package (observe that the output of this function is a list).
+
+  4. Estimate the mean square error of the linear model by cross validation. (Use a loop).
+
+
+  5. Now, we want to explain **maxO3** by the other variables with a tree. Fit a tree on the whole dataset with the **rpart** function of the **rpart** package. 
+
+  6. Visualize the tree with 
+
+      * the **rpart.plot** function of the **rpart.plot** package
+      * the **visTree** function of the **visNetwork** package
+
+
+  7. Estimate the mean square error of the tree by 10-fold cross validation and make a comparison with the linear model.
+
+
+### Remark
+
+In the ILS lecture, we will see that package **caret** allow to estimate MSE or (RMSE) directly
+```{r}
+ctrl <- trainControl(method="cv",number=10)
+train(maxO3~.,data=ozone,method="lm",trControl=ctrl)
+```
+
