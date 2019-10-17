@@ -41,4 +41,6 @@ title: R for datascience
 - Tuto 4
   - [ozone.txt](ozone.txt)
 
+### Multiple choice test 2018-2019
 
+- [test](sujet_2018_2019.pdf)
