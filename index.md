@@ -42,3 +42,4 @@ title: R for datascience
 ### Multiple choice test 2018-2019
 
 - [test](sujet_2018_2019.pdf)
+- [Correction](cor_test_2018_2019.pdf)
